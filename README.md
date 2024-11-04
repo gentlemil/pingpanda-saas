@@ -1,7 +1,17 @@
-STAR THE REPO IF YOURE COOL
+Run project:
 
-jStack - an opinionated stack to ship high-performance, low-cost Next.js apps inspired by the T3 stack.
+```
+npm run dev
+```
 
-This is an early-stage stack so probably dont use in production yet. If you're wild enough to do so despite this warning, let me know your website URL so I can feature you lol
+Push changes in prisma schema to the db:
 
-documentation coming soon, for now just clone this repo, fill out the .env.example :))
+```
+npx prisma db push
+```
+
+Open Prisma Studio
+
+```
+npx prisma studio
+```
