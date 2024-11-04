@@ -1,14 +1,14 @@
 import Image from 'next/image'
-import { Heading } from '@/components/ui/heading'
-import { MaxWidthWrapper } from '@/components/ui/max-width-wrapper'
-import { ShinyButton } from '@/components/ui/shiny-button'
-import { MockDiscordUI } from '@/components/ui/mock-discord-ui'
+import { Heading } from '@/components/heading'
+import { MaxWidthWrapper } from '@/components/max-width-wrapper'
+import { ShinyButton } from '@/components/shiny-button'
+import { MockDiscordUI } from '@/components/mock-discord-ui'
 import { AnimatedList } from '@/components/ui/animated-list'
-import { DiscordMessage } from '@/components/ui/discord-message'
+import { DiscordMessage } from '@/components/discord-message'
 import { Check, Star } from 'lucide-react'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import { Icons } from '@/components/ui/icons'
+import { Icons } from '@/components/icons'
 
 const Page = () => {
   const codeSnippet = `await fetch("http://localhost:3000/api/v1/events", {

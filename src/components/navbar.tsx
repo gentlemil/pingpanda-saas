@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { MaxWidthWrapper } from './max-width-wrapper'
 import { SignOutButton } from '@clerk/nextjs'
-import { Button, buttonVariants } from './button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
 import { currentUser } from '@clerk/nextjs/server'
 

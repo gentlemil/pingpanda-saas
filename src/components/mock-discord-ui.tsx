@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react'
-import { Icons } from './icons'
+import { Icons } from '@/components/icons'
 import {
   Cog,
   Gift,
