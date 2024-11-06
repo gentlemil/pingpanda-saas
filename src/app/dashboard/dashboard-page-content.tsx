@@ -1,5 +1,5 @@
 'use client'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { client } from '../lib/client'
 import { LoadingSpinner } from '@/components/loading-spinner'
 import { buttonVariants, Button } from '@/components/ui/button'
@@ -7,9 +7,12 @@ import { format, formatDistanceToNow } from 'date-fns'
 import { Clock, Database, BarChart2, ArrowRight, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
+import { Modal } from '@/components/ui/modal'
 
 export const DashboardPageContent = () => {
   const [deletingCategory, setDeletingCategory] = useState<string | null>(null)
+  const queryClient = useQueryClient()
+
   const { data: categories, isPending: isEventCategoriesLoading } = useQuery({
     queryKey: ['user-event-categories'],
     queryFn: async () => {
@@ -18,6 +21,19 @@ export const DashboardPageContent = () => {
       return categories
     },
   })
+
+  const { mutate: deleteCategory, isPending: isDeletingCategory } = useMutation(
+    {
+      mutationKey: ['event-category-delete'],
+      mutationFn: async (name: string) => {
+        await client.category.deleteCategory.$post({ name })
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['user-event-categories'] })
+        setDeletingCategory(null)
+      },
+    }
+  )
 
   if (isEventCategoriesLoading) {
     return (
@@ -111,6 +127,39 @@ export const DashboardPageContent = () => {
           </li>
         ))}
       </ul>
+
+      <Modal
+        showModal={!!deletingCategory}
+        setShowModal={() => setDeletingCategory(null)}
+        className='max-w-md p-8'
+      >
+        <div className='space-y-6'>
+          <div>
+            <h2 className='text-lg/7 font-medium tracking-tight text-gray-950'>
+              Delete Category
+            </h2>
+            <p className='text-sm/6 text-gray-600'>
+              Are you sure you want to delete the category "{deletingCategory}"?
+              This action cannot be undone.
+            </p>
+          </div>
+
+          <div className='flex justify-end space-x-3 pt-4 border-t'>
+            <Button variant='outline' onClick={() => setDeletingCategory(null)}>
+              Cancel
+            </Button>
+            <Button
+              variant='destructive'
+              onClick={() =>
+                deletingCategory && deleteCategory(deletingCategory)
+              }
+              disabled={isDeletingCategory}
+            >
+              {isDeletingCategory ? 'Deleting...' : 'Delete'}
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </>
   )
 }
