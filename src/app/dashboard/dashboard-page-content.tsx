@@ -1,5 +1,4 @@
 'use client'
-
 import { useQuery } from '@tanstack/react-query'
 import { client } from '../lib/client'
 import { LoadingSpinner } from '@/components/loading-spinner'
@@ -7,8 +6,10 @@ import { buttonVariants, Button } from '@/components/ui/button'
 import { format, formatDistanceToNow } from 'date-fns'
 import { Clock, Database, BarChart2, ArrowRight, Trash2 } from 'lucide-react'
 import Link from 'next/link'
+import { useState } from 'react'
 
 export const DashboardPageContent = () => {
+  const [deletingCategory, setDeletingCategory] = useState<string | null>(null)
   const { data: categories, isPending: isEventCategoriesLoading } = useQuery({
     queryKey: ['user-event-categories'],
     queryFn: async () => {
@@ -17,8 +18,6 @@ export const DashboardPageContent = () => {
       return categories
     },
   })
-
-  const setDeletingCategory = (categoryName: string) => {}
 
   if (isEventCategoriesLoading) {
     return (
