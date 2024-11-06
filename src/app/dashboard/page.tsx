@@ -1,6 +1,7 @@
 import { DashboardPage } from '@/components/dashboard-page'
 import { currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
+import { DashboardPageContent } from './dashboard-page-content'
 
 const Page = async () => {
   const auth = await currentUser()
@@ -9,7 +10,11 @@ const Page = async () => {
     redirect('/sign-in')
   }
 
-  return <DashboardPage title='Dashboard'>Content</DashboardPage>
+  return (
+    <DashboardPage title='Dashboard'>
+      <DashboardPageContent />
+    </DashboardPage>
+  )
 }
 
 export default Page

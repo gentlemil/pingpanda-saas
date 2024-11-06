@@ -1,6 +1,6 @@
 'use client'
-import { Heading } from '@/components/ui/heading'
-import { LoadingSpinner } from '@/components/ui/loading-spinner'
+import { Heading } from '@/components/heading'
+import { LoadingSpinner } from '@/components/loading-spinner'
 import { client } from '@/app/lib/client'
 import { useQuery } from '@tanstack/react-query'
 import { LucideProps } from 'lucide-react'
