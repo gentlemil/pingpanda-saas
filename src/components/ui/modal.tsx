@@ -1,8 +1,8 @@
-import { useMediaQuery } from "@/hooks/use-media-query"
-import { cn } from "@/utils"
-import { Dispatch, ReactNode, SetStateAction } from "react"
-import { Drawer } from "vaul"
-import { Dialog, DialogContent, DialogTitle } from "./dialog"
+import { useMediaQuery } from '@/hooks/use-media-query'
+import { cn } from '@/utils'
+import { Dispatch, ReactNode, SetStateAction } from 'react'
+import { Drawer } from 'vaul'
+import { Dialog, DialogContent, DialogTitle } from './dialog'
 
 interface ModalProps {
   children?: ReactNode
@@ -47,16 +47,16 @@ export const Modal = ({
           }
         }}
       >
-        <Drawer.Overlay className="fixed inset-0 z-40 bg-gray-100 bg-opacity-10 backdrop-blur" />
+        <Drawer.Overlay className='fixed inset-0 z-40 bg-gray-100 bg-opacity-10 backdrop-blur' />
         <Drawer.Portal>
           <Drawer.Content
             className={cn(
-              "fixed !max-w-none bottom-0 left-0 right-0 z-50 mt-24 rounded-t-[10px] border-t border-gray-200 bg-white",
+              'fixed !max-w-none bottom-0 left-0 right-0 z-50 mt-24 rounded-t-[10px] border-t border-gray-200 bg-white',
               className
             )}
           >
-            <div className="sticky top-0 z-20 flex w-full items-center justify-center rounded-t-[10px] bg-inherit">
-              <div className="my-3 h-1 w-12 rounded-full bg-gray-300" />
+            <div className='sticky top-0 z-20 flex w-full items-center justify-center rounded-t-[10px] bg-inherit'>
+              <div className='my-3 h-1 w-12 rounded-full bg-gray-300' />
             </div>
 
             {children}
@@ -75,9 +75,8 @@ export const Modal = ({
         }
       }}
     >
-      <DialogTitle className="sr-only">Dialog</DialogTitle>
+      <DialogTitle className='sr-only'>Dialog</DialogTitle>
       <DialogContent>{children}</DialogContent>
     </Dialog>
   )
-}import { Overlay, Portal, Content } from "@radix-ui/react-dialog"
-import { Root } from "postcss"
+}
