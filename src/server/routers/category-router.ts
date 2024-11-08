@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { EVENT_CATEGORY_VALIDATOR } from '@/app/lib/validators/event-category-validator'
 import { parseColor } from '@/utils'
 import { EDIT_EVENT_CATEGORY_VALIDATOR } from '@/app/lib/validators/edit-event-category-validator'
+import { CATEGORY_NAME_VALIDATOR } from '@/app/lib/validators/category-validator'
 
 export const categoryRouter = router({
   getEventCategories: privateProcedure.query(async ({ c, ctx }) => {
@@ -126,7 +127,7 @@ export const categoryRouter = router({
         return c.json({ editCategory })
       } catch (error) {
         console.error(error)
-        throw new HTTPException(400)
+        throw new HTTPException(400, {})
       }
     }),
 
@@ -144,4 +145,33 @@ export const categoryRouter = router({
 
     return c.json({ success: true, count: categories.count })
   }),
+
+  pollCategory: privateProcedure
+    .input(z.object({ name: CATEGORY_NAME_VALIDATOR }))
+    .query(async ({ c, ctx, input }) => {
+      const { name } = input
+      const category = await db.eventCategory.findUnique({
+        where: {
+          name_userId: {
+            name,
+            userId: ctx.user.id,
+          },
+        },
+        include: {
+          _count: {
+            select: {
+              events: true,
+            },
+          },
+        },
+      })
+
+      if (!category) {
+        throw new HTTPException(404, { message: `Category ${name} not found.` })
+      }
+
+      const hasEvents = category._count.events > 0
+
+      return c.json({ hasEvents })
+    }),
 })
