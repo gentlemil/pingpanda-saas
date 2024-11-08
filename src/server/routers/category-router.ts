@@ -1,3 +1,4 @@
+import { HTTPException } from 'hono/http-exception'
 import { db } from '@/db'
 import { router } from '../__internals/router'
 import { privateProcedure } from '../procedures'
@@ -5,6 +6,7 @@ import { startOfMonth } from 'date-fns'
 import { z } from 'zod'
 import { EVENT_CATEGORY_VALIDATOR } from '@/app/lib/validators/event-category-validator'
 import { parseColor } from '@/utils'
+import { EDIT_EVENT_CATEGORY_VALIDATOR } from '@/app/lib/validators/edit-event-category-validator'
 
 export const categoryRouter = router({
   getEventCategories: privateProcedure.query(async ({ c, ctx }) => {
@@ -91,8 +93,6 @@ export const categoryRouter = router({
 
       // todo: payment logic
 
-      console.log('halo')
-
       const eventCategory = await db.eventCategory.create({
         data: {
           name: name.toLowerCase(),
@@ -103,5 +103,30 @@ export const categoryRouter = router({
       })
 
       return c.json({ eventCategory })
+    }),
+
+  editEventCategory: privateProcedure
+    .input(EDIT_EVENT_CATEGORY_VALIDATOR)
+    .mutation(async ({ c, ctx, input }) => {
+      try {
+        const { user } = ctx
+        const { id, name, color, emoji } = input
+
+        const editCategory = await db.eventCategory.update({
+          data: {
+            name: name.toLowerCase(),
+            color: parseColor(color),
+            emoji,
+            userId: user.id,
+          },
+          where: {
+            id,
+          },
+        })
+        return c.json({ editCategory })
+      } catch (error) {
+        console.error(error)
+        throw new HTTPException(400)
+      }
     }),
 })

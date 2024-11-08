@@ -4,13 +4,25 @@ import { client } from '../lib/client'
 import { LoadingSpinner } from '@/components/loading-spinner'
 import { buttonVariants, Button } from '@/components/ui/button'
 import { format, formatDistanceToNow } from 'date-fns'
-import { Clock, Database, BarChart2, ArrowRight, Trash2 } from 'lucide-react'
+import {
+  Clock,
+  Database,
+  BarChart2,
+  ArrowRight,
+  Trash2,
+  Pencil,
+} from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 import { Modal } from '@/components/ui/modal'
+import { EditEventCategoryModal } from '@/components/edit-event-category-modal'
+import { EventCategory } from '@prisma/client'
+
+export type Category = Partial<EventCategory>
 
 export const DashboardPageContent = () => {
   const [deletingCategory, setDeletingCategory] = useState<string | null>(null)
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null)
   const queryClient = useQueryClient()
 
   const { data: categories, isPending: isEventCategoriesLoading } = useQuery({
@@ -60,26 +72,35 @@ export const DashboardPageContent = () => {
             <div className='pointer-events-none z-0 absolute inset-px rounded-lg shadow-sm transition-all duration-300 group-hover:shadow-md ring-1 ring-black/5' />
 
             <div className='relative p-6 z-10'>
-              <div className='flex items-center gap-4 mb-6'>
-                <div
-                  className='size-12 rounded-full'
-                  style={{
-                    backgroundColor: category.color
-                      ? `#${category.color.toString(16).padStart(6, '0')}`
-                      : '#f3f4f6',
-                  }}
-                />
-
-                <div>
-                  <h3 className='text-lg/7 font-medium tracking-tight text-gray-950'>
-                    {category.emoji || '📂'} {category.name}
-                  </h3>
-                  <p className='text-sm/6 text-gray-600'>
-                    {format(category.createdAt, 'MMM d, yyyy')}
-                  </p>
+              <div className='flex justify-between'>
+                <div className='flex items-center gap-4 mb-6'>
+                  <div
+                    className='size-12 rounded-full'
+                    style={{
+                      backgroundColor: category.color
+                        ? `#${category.color.toString(16).padStart(6, '0')}`
+                        : '#f3f4f6',
+                    }}
+                  />
+                  <div>
+                    <h3 className='text-lg/7 font-medium tracking-tight text-gray-950'>
+                      {category.emoji || '📂'} {category.name}
+                    </h3>
+                    <p className='text-sm/6 text-gray-600'>
+                      {format(category.createdAt, 'MMM d, yyyy')}
+                    </p>
+                  </div>
                 </div>
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  className='text-gray-500 hover:text-red-600 transition-colors'
+                  aria-label={`Edit ${category.name} category`}
+                  onClick={() => setEditingCategory(category)}
+                >
+                  <Pencil className='size-5' />
+                </Button>
               </div>
-
               <div className='space-y-3 mb-6'>
                 <div className='flex items-center text-sm/5 text-gray-600'>
                   <Clock className='size-4 mr-2 text-brand-500' />
@@ -128,6 +149,21 @@ export const DashboardPageContent = () => {
         ))}
       </ul>
 
+      {/* EDIT CATEGORY */}
+      {!!editingCategory && (
+        <Modal
+          showModal={!!editingCategory}
+          setShowModal={() => setEditingCategory(null)}
+          className='max-w-xl p-8'
+        >
+          <EditEventCategoryModal
+            category={editingCategory}
+            closeModal={() => setEditingCategory(null)}
+          ></EditEventCategoryModal>
+        </Modal>
+      )}
+
+      {/* DELETE CATEGORY */}
       <Modal
         showModal={!!deletingCategory}
         setShowModal={() => setDeletingCategory(null)}
