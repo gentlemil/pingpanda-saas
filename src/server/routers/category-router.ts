@@ -2,7 +2,9 @@ import { db } from '@/db'
 import { router } from '../__internals/router'
 import { privateProcedure } from '../procedures'
 import { startOfMonth } from 'date-fns'
-import { object, string, z } from 'zod'
+import { z } from 'zod'
+import { EVENT_CATEGORY_VALIDATOR } from '@/app/lib/validators/event-category-validator'
+import { parseColor } from '@/utils'
 
 export const categoryRouter = router({
   getEventCategories: privateProcedure.query(async ({ c, ctx }) => {
@@ -79,5 +81,27 @@ export const categoryRouter = router({
       })
 
       return c.json({ success: true })
+    }),
+
+  createEventCategory: privateProcedure
+    .input(EVENT_CATEGORY_VALIDATOR)
+    .mutation(async ({ c, ctx, input }) => {
+      const { user } = ctx
+      const { name, color, emoji } = input
+
+      // todo: payment logic
+
+      console.log('halo')
+
+      const eventCategory = await db.eventCategory.create({
+        data: {
+          name: name.toLowerCase(),
+          color: parseColor(color),
+          emoji,
+          userId: user.id,
+        },
+      })
+
+      return c.json({ eventCategory })
     }),
 })
