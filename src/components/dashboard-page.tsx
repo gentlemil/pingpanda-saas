@@ -22,8 +22,8 @@ export const DashboardPage = ({
   return (
     <section className='flex-1 h-full w-full flex flex-col'>
       <div className='p-6 sm:p-8 flex justify-between border-b border-gray-200'>
-        <div className='w-full flex flex-col sm:flex-row items-start sm:items-center gap-6'>
-          <div className='flex items-center gap-8'>
+        <div className='w-full flex flex-row justify-between sm:items-center gap-6'>
+          <div className='flex items-center gap-8 w-full'>
             {!hideBackButton && (
               <Button
                 onClick={() => router.push('/dashboard')}
@@ -36,7 +36,7 @@ export const DashboardPage = ({
             <Heading>{title}</Heading>
           </div>
 
-          {cta && <div className='w-full'>{cta}</div>}
+          {cta && <div>{cta}</div>}
         </div>
       </div>
 
