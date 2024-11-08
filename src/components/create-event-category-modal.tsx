@@ -16,7 +16,14 @@ import { COLOR_OPTIONS, EMOJI_OPTIONS } from '@/lib/constants'
 
 type EventCategoryForm = z.infer<typeof EVENT_CATEGORY_VALIDATOR>
 
-export const CreateEventCategoryModal = ({ children }: PropsWithChildren) => {
+interface CreateEventCategoryModalProps extends PropsWithChildren {
+  containerClassName?: string
+}
+
+export const CreateEventCategoryModal = ({
+  children,
+  containerClassName,
+}: CreateEventCategoryModalProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
 
@@ -51,7 +58,10 @@ export const CreateEventCategoryModal = ({ children }: PropsWithChildren) => {
 
   return (
     <>
-      <div className='inline' onClick={() => setIsOpen(true)}>
+      <div
+        className={(cn(containerClassName), 'inline')}
+        onClick={() => setIsOpen(true)}
+      >
         {children}
       </div>
 

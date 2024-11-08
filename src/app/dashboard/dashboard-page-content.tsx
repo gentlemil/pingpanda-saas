@@ -17,6 +17,7 @@ import { useState } from 'react'
 import { Modal } from '@/components/ui/modal'
 import { EditEventCategoryModal } from '@/components/edit-event-category-modal'
 import { EventCategory } from '@prisma/client'
+import { DashboardEmptyState } from './dashboard-empty-state'
 
 export type Category = Partial<EventCategory>
 
@@ -56,7 +57,7 @@ export const DashboardPageContent = () => {
   }
 
   if (!categories || categories.length === 0) {
-    return <div>empty state</div>
+    return <DashboardEmptyState />
   }
 
   return (
