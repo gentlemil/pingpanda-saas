@@ -34,7 +34,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { map } from 'zod'
+import { LineGraph } from '@/components/line-graph'
 
 interface CategoryPageContentProps {
   hasEvents: boolean
@@ -293,6 +293,14 @@ export const CategoryPageContent = ({
             <Heading className='text-3xl'>Event overview</Heading>
           </div>
         </div>
+
+        <Card contentClassName='px-6 py-4'>
+          <LineGraph
+            activeTab={activeTab}
+            data={data?.countedEventsByTimePeriod}
+          ></LineGraph>
+        </Card>
+
         <Card contentClassName='px-6 py-4'>
           <Table>
             <TableHeader>

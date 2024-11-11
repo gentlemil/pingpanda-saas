@@ -8,6 +8,11 @@ import { EVENT_CATEGORY_VALIDATOR } from '@/app/lib/validators/event-category-va
 import { parseColor } from '@/utils'
 import { EDIT_EVENT_CATEGORY_VALIDATOR } from '@/app/lib/validators/edit-event-category-validator'
 import { CATEGORY_NAME_VALIDATOR } from '@/app/lib/validators/category-validator'
+import {
+  countEventByHour,
+  countEventsByMonthDay,
+  countEventsByWeekDay,
+} from '@/lib/category-helpers'
 
 export const categoryRouter = router({
   getEventCategories: privateProcedure.query(async ({ c, ctx }) => {
@@ -198,53 +203,75 @@ export const categoryRouter = router({
           break
         case 'month':
           startDate = startOfMonth(now)
+          break
         default:
           startDate = startOfDay(now)
+          break
       }
 
-      const [events, eventsCount, uniqueFieldCount] = await Promise.all([
-        db.event.findMany({
-          where: {
-            EventCategory: { name, userId: ctx.user.id },
-            createdAt: { gte: startDate },
-          },
-          skip: (page - 1) * limit,
-          take: limit,
-          orderBy: { createdAt: 'desc' },
-        }),
-
-        db.event.count({
-          where: {
-            EventCategory: { name, userId: ctx.user.id },
-            createdAt: { gte: startDate },
-          },
-        }),
-
-        db.event
-          .findMany({
+      const [events, eventsCount, uniqueFieldCount, countedEventsByTimePeriod] =
+        await Promise.all([
+          db.event.findMany({
             where: {
               EventCategory: { name, userId: ctx.user.id },
               createdAt: { gte: startDate },
             },
-            select: {
-              fields: true,
-            },
-            distinct: ['fields'],
-          })
-          .then((events) => {
-            const fieldNames = new Set<string>()
-            events.forEach((event) => {
-              Object.keys(event.fields as object).forEach((fieldName) => {
-                fieldNames.add(fieldName)
-              })
-            })
-            return fieldNames.size
+            skip: (page - 1) * limit,
+            take: limit,
+            orderBy: { createdAt: 'desc' },
           }),
-      ])
+
+          db.event.count({
+            where: {
+              EventCategory: { name, userId: ctx.user.id },
+              createdAt: { gte: startDate },
+            },
+          }),
+
+          db.event
+            .findMany({
+              where: {
+                EventCategory: { name, userId: ctx.user.id },
+                createdAt: { gte: startDate },
+              },
+              select: {
+                fields: true,
+              },
+              distinct: ['fields'],
+            })
+            .then((events) => {
+              const fieldNames = new Set<string>()
+              events.forEach((event) => {
+                Object.keys(event.fields as object).forEach((fieldName) => {
+                  fieldNames.add(fieldName)
+                })
+              })
+              return fieldNames.size
+            }),
+
+          db.event
+            .findMany({
+              where: {
+                EventCategory: { name, userId: ctx.user.id },
+                createdAt: { gte: startDate },
+              },
+            })
+            .then((events) => {
+              switch (timeRange) {
+                case 'today':
+                  return countEventByHour(events)
+                case 'week':
+                  return countEventsByWeekDay(events)
+                case 'month':
+                  return countEventsByMonthDay(events)
+              }
+            }),
+        ])
       return c.superjson({
         events,
         eventsCount,
         uniqueFieldCount,
+        countedEventsByTimePeriod,
       })
     }),
 
