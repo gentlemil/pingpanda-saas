@@ -3,6 +3,7 @@ import { privateProcedure } from '../procedures'
 import { addMonths, startOfMonth } from 'date-fns'
 import { db } from '@/db'
 import { FREE_QUOTA, PRO_QUOTA } from '@/config'
+import { Plan } from '@prisma/client'
 
 export const projectRouter = router({
   getUsage: privateProcedure.query(async ({ c, ctx }) => {
@@ -24,7 +25,7 @@ export const projectRouter = router({
       where: { userId: user.id },
     })
 
-    const limits = user.plan === 'PRO' ? PRO_QUOTA : FREE_QUOTA
+    const limits = user.plan === Plan.PRO ? PRO_QUOTA : FREE_QUOTA
 
     const resetDate = addMonths(currentDate, 1)
 

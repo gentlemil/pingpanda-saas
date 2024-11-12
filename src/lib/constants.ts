@@ -1,4 +1,4 @@
-export const COLOR_OPTIONS = [
+export const COLOR_OPTIONS: string[] = [
   '#FF6B6B', // bg-[#FF6B6B] ring-[#FF6B6B] Bright Red
   '#4ECDC4', // bg-[#4ECDC4] ring-[#4ECDC4] Teal
   '#45B7D1', // bg-[#45B7D1] ring-[#45B7D1] Sky Blue
@@ -11,7 +11,7 @@ export const COLOR_OPTIONS = [
   '#E17055', // bg-[#E17055] ring-[#E17055] Terracotta
 ]
 
-export const EMOJI_OPTIONS = [
+export const EMOJI_OPTIONS: { emoji: string; label: string }[] = [
   { emoji: '💰', label: 'Money (Sale)' },
   { emoji: '👤', label: 'User (Sign-up)' },
   { emoji: '🎉', label: 'Celebration' },
@@ -22,4 +22,11 @@ export const EMOJI_OPTIONS = [
   { emoji: '🏆', label: 'Achievement' },
   { emoji: '💡', label: 'Idea' },
   { emoji: '🔔', label: 'Notification' },
+]
+
+export const INCLUDED_FEATURES: string[] = [
+  '10.000 real-time events per month',
+  '10 event categories',
+  'Advanced analytics and insights',
+  'Priority support',
 ]
