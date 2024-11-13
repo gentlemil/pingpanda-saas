@@ -41,6 +41,7 @@ export const LineGraph = ({ activeTab, data }: LineGrapghProps) => {
       : format(new Date(el), 'dd')
   )
 
+  // TODO
   const options: ChartOptions = {
     responsive: true,
     plugins: {
@@ -67,7 +68,7 @@ export const LineGraph = ({ activeTab, data }: LineGrapghProps) => {
 
   return (
     <div className=''>
-      <Line options={options} data={lineChartData} />
+      <Line data={lineChartData} />
     </div>
   )
 }
